@@ -10,5 +10,5 @@ Be sure that your version of Python is between 3.8 and 3.11. 3.12 is not support
 > python -m pip install -r requirements.txt # install dependencies listed in requirements.txt
 ```
 
-We are building off of simple_world_comm.py in the pettingzoo library.
-https://pettingzoo.farama.org/environments/mpe/simple_world_comm/
+We are building off of the Simple Spread environment in the pettingzoo library.
+https://pettingzoo.farama.org/environments/mpe/simple_spread/
