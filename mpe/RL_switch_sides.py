@@ -1,8 +1,6 @@
-# from pettingzoo.mpe import simple_spread_v3
+import switch_sides_v0
 
-import tunnel_navigation_v0
-
-env = tunnel_navigation_v0.parallel_env(render_mode="human") # uses parallel API so that all agents move at the same time
+env = switch_sides_v0.parallel_env(render_mode="human")
 observations, infos = env.reset()
 
 while env.agents:

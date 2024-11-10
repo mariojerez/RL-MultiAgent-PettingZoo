@@ -1,6 +1,7 @@
 # noqa: D212, D415
 """
-# Simple Spread
+# Switch Sides
+TODO: update comments below to be accurate to switch_sides rather than simple_spread
 
 ```{figure} mpe_simple_spread.gif
 :width: 140px
@@ -36,7 +37,7 @@ Agent action space: `[no_action, move_left, move_right, move_down, move_up]`
 ### Arguments
 
 ``` python
-simple_spread_v3.env(N=3, local_ratio=0.5, max_cycles=25, continuous_actions=False, dynamic_rescaling=False)
+simple_spread_v3.env(N=3, local_ratio=0.5, max_cycles=25, continuous_actions=False)
 ```
 
 
@@ -48,8 +49,6 @@ simple_spread_v3.env(N=3, local_ratio=0.5, max_cycles=25, continuous_actions=Fal
 `max_cycles`:  number of frames (a step for each agent) until game terminates
 
 `continuous_actions`: Whether agent action spaces are discrete(default) or continuous
-
-`dynamic_rescaling`: Whether to rescale the size of agents and landmarks based on the screen size
 
 """
 
@@ -69,8 +68,7 @@ class raw_env(SimpleEnv, EzPickle):
         local_ratio=0.5,
         max_cycles=25,
         continuous_actions=False,
-        render_mode=None,
-        dynamic_rescaling=False,
+        render_mode=None
     ):
         EzPickle.__init__(
             self,
@@ -92,10 +90,9 @@ class raw_env(SimpleEnv, EzPickle):
             render_mode=render_mode,
             max_cycles=max_cycles,
             continuous_actions=continuous_actions,
-            local_ratio=local_ratio,
-            dynamic_rescaling=dynamic_rescaling,
+            local_ratio=local_ratio
         )
-        self.metadata["name"] = "tunnel_navigation_v0"
+        self.metadata["name"] = "switch_sides_v0"
 
 
 env = make_env(raw_env)
