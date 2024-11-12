@@ -38,4 +38,4 @@ git branch -d [other_branch] # delete the branch when you're done using it.
 git push # pushes changes to repository
 ```
 
-A good practice is to create an issue for whatever you want to fix or work on, and then create a branch to work on that specific issue. Mention the issue number in the commit message and close the issue after you've merged to the main branch. Thoughtful comments are always helpful!
+A good practice is to create an issue for whatever you want to fix or work on, and then create a branch to work on that specific issue. Mention the issue number in the commit message and close the issue after you've merged to the main branch. Thoughtful comments are always helpful.
