@@ -2,6 +2,7 @@ import switch_sides_v0
 
 env = switch_sides_v0.parallel_env(render_mode="human")
 observations, infos = env.reset()
+env.render()
 
 while env.agents:
     # this is where you would insert your policy
