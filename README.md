@@ -28,14 +28,13 @@ git add [file_name] # Stage changes you made to a spefific file.
 git add --all # Stage all changes you made, preparing to be committed
 git reset # undoes git add if you decide you don't want to stage something
 git commit -m "[enter commit comment, maybe mention issue #[issuenum]]
+git push origin [branch_name] #pushes changes to branch in remote repository so others can see
 
 ## merge changes to main
-git switch main # switch to main branch
-git merge [other_branch] # merges changes from other_branch to main.
-git branch -d [other_branch] # delete the branch when you're done using it.
+creat a pull request on GitHub so that the rest of the team can review your code
+before merging to main branch.
 
-## move local changes to the repository
-git push # pushes changes to repository
+helpful video: https://youtu.be/MnUd31TvBoU?si=BMQ1mHRvrJd1we3S
 ```
 
 A good practice is to create an issue for whatever you want to fix or work on, and then create a branch to work on that specific issue. Mention the issue number in the commit message and close the issue after you've merged to the main branch. Thoughtful comments are always helpful.
