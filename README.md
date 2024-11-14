@@ -17,7 +17,7 @@ Be sure that your version of Python is between 3.8 and 3.11. 3.12 is not support
 ```console
 ## Create new branch
 git clone [url]
-git pull # pulls changes from repo. Do this frequently and before making changes.
+git pull # Do while in main branch! Pulls changes from repo. Do this frequently and before creatinf new branch so working with latest code.
 git branch [branch_name] # Create a new branch
 git branch # shows what branch you're on
 git switch [branch_name] #switch to new branch
