@@ -293,18 +293,37 @@ class SimpleEnv(AECEnv):
             pygame.display.flip()
             self.clock.tick(self.metadata["render_fps"])
             return
+        
+
+    def is_agent_near_landmark(self, agent, landmark, threshold=0.2):
+        delta_pos = agent.state.p_pos - landmark.state.p_pos
+        dist = np.sqrt(np.sum(np.square(delta_pos)))
+        return dist < threshold
+
 
     def draw(self):
+
+        for landmark in self.world.landmarks:
+            print(f"Landmark {landmark.name} Position: {landmark.state.p_pos}, Velocity: {landmark.state.p_vel}")
+
+            # Check proximity to each agent
+            for agent in self.world.agents:
+                if self.is_agent_near_landmark(agent, landmark):  # Use `self` to call the method
+                    landmark.color = np.array([1.0, 0.0, 0.0])  # Change to red
+                    break
         # clear screen
         self.screen.fill((255, 255, 255))
 
         # update bounds to center around agent
-        all_poses = [entity.state.p_pos for entity in self.world.entities]
-        cam_range = np.max(np.abs(np.array(all_poses)))
+        #all_poses = [entity.state.p_pos for entity in self.world.entities]
+        #cam_range = np.max(np.abs(np.array(all_poses)))
+
+        #TODO: Get rid of scaling
+        #TODO: Adjust environment so that it is bounded between -1 and 1
 
         # The scaling factor is used for dynamic rescaling of the rendering - a.k.a Zoom In/Zoom Out effect
         # The 0.9 is a factor to keep the entities from appearing "too" out-of-bounds
-        scaling_factor = 0.9 * self.original_cam_range / cam_range
+        #scaling_factor = 0.9 * self.original_cam_range / cam_range
 
         # update geometry and text positions
         text_line = 0
@@ -315,15 +334,15 @@ class SimpleEnv(AECEnv):
                 -1
             )  # this makes the display mimic the old pyglet setup (ie. flips image)
             x = (
-                (x / cam_range) * self.width // 2 * 0.9
+                (x / self.original_cam_range) * self.width // 2 * 0.9
             )  # the .9 is just to keep entities from appearing "too" out-of-bounds
-            y = (y / cam_range) * self.height // 2 * 0.9
+            y = (y / self.original_cam_range) * self.height // 2 * 0.9
             x += self.width // 2
             y += self.height // 2
 
             # 350 is an arbitrary scale factor to get pygame to render similar sizes as pyglet
             if self.dynamic_rescaling:
-                radius = entity.size * 350 * scaling_factor
+                radius = entity.size * 350 #* scaling_factor
             else:
                 radius = entity.size * 350
             
@@ -332,11 +351,12 @@ class SimpleEnv(AECEnv):
                 pygame.draw.circle(self.screen, (0, 0, 0), (x, y), radius, 1)  # borders
             elif isinstance(entity, Landmark):
                 pygame.draw.rect(self.screen, entity.color * 200, (x, y, radius * 10, radius * 20))
-                pygame.draw.rect(self.screen, (0, 0, 0), (x, y, radius, radius * 10), 20)
+                pygame.draw.rect(self.screen, (0, 0, 0), (x, y, radius, radius), 1)
 
-            assert (
-                0 < x < self.width and 0 < y < self.height
-            ), f"Coordinates {(x, y)} are out of bounds."
+            #TODO: Add this assert back when we limit agents from leaving boundary
+            #assert (
+            #    0 < x < self.width and 0 < y < self.height
+            #), f"Coordinates {(x, y)} are out of bounds."
 
             # text
             if isinstance(entity, Agent):
