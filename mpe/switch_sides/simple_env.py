@@ -295,22 +295,11 @@ class SimpleEnv(AECEnv):
             return
         
 
-    def is_agent_near_landmark(self, agent, landmark, threshold=0.2):
-        delta_pos = agent.state.p_pos - landmark.state.p_pos
-        dist = np.sqrt(np.sum(np.square(delta_pos)))
-        return dist < threshold
 
 
     def draw(self):
 
-        for landmark in self.world.landmarks:
-            print(f"Landmark {landmark.name} Position: {landmark.state.p_pos}, Velocity: {landmark.state.p_vel}")
-
-            # Check proximity to each agent
-            for agent in self.world.agents:
-                if self.is_agent_near_landmark(agent, landmark):  # Use `self` to call the method
-                    landmark.color = np.array([1.0, 0.0, 0.0])  # Change to red
-                    break
+    
         # clear screen
         self.screen.fill((255, 255, 255))
 
