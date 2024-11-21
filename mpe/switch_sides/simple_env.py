@@ -303,17 +303,6 @@ class SimpleEnv(AECEnv):
         # clear screen
         self.screen.fill((255, 255, 255))
 
-        # update bounds to center around agent
-        #all_poses = [entity.state.p_pos for entity in self.world.entities]
-        #cam_range = np.max(np.abs(np.array(all_poses)))
-
-        #TODO: Get rid of scaling
-        #TODO: Adjust environment so that it is bounded between -1 and 1
-
-        # The scaling factor is used for dynamic rescaling of the rendering - a.k.a Zoom In/Zoom Out effect
-        # The 0.9 is a factor to keep the entities from appearing "too" out-of-bounds
-        #scaling_factor = 0.9 * self.original_cam_range / cam_range
-
         # update geometry and text positions
         text_line = 0
         for e, entity in enumerate(self.world.entities):
