@@ -25,6 +25,9 @@
 # Icon must end with two \r
 Icon
 
+# Ignore the rl_env (venv) directory
+rl_env/
+
 
 # Thumbnails
 ._*
