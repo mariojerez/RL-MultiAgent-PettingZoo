@@ -21,7 +21,7 @@ class AgentState(
 class Action:  # action of the agent
     def __init__(self):
         # physical action
-        self.u = None
+        self.u = None # Amount of force applied in each dimension
         # communication action
         self.c = None
 
@@ -31,7 +31,6 @@ class Entity:  # properties and state of physical world entity
         # name
         self.name = ""
         # properties:
-        self.size = 0.050
         # entity can move / be pushed
         self.movable = False
         # entity collides with others
@@ -56,11 +55,15 @@ class Entity:  # properties and state of physical world entity
 class Landmark(Entity):  # properties of landmark entities
     def __init__(self):
         super().__init__()
+        self.length = 300
+        self.width = 50
 
 
 class Agent(Entity):  # properties of agent entities
     def __init__(self):
         super().__init__()
+        # radius (cm or pixels)
+        self.radius = 14 #Turtlebot3 Burger size (L x W x H) = 13.8cm x 17.8cm x 19.2cm
         # agents are movable by default
         self.movable = True
         # cannot send communication signals
@@ -79,6 +82,9 @@ class Agent(Entity):  # properties of agent entities
         self.action = Action()
         # script behavior to execute
         self.action_callback = None
+        # max speed
+        self.max_speed = 22 # cm/s
+
 
 
 class World:  # multi-agent world
@@ -208,7 +214,15 @@ class World:  # multi-agent world
         delta_pos = entity_a.state.p_pos - entity_b.state.p_pos
         dist = np.sqrt(np.sum(np.square(delta_pos)))
         # minimum allowable distance
-        dist_min = entity_a.size + entity_b.size
+        #temporary patch:
+        dist_min = 0
+        for entity in (entity_a, entity_b):
+            if isinstance(entity, Agent):
+                dist_min += entity.radius
+            elif isinstance(entity, Landmark):
+                dist_min += entity.width #this will allow agents to pass through most of landmark without collision for now, fix later.
+        #TODO: Adjust logic so that determines collision based on length/width if landmark, and radius if agent.
+        
         # softmax penetration
         k = self.contact_margin
         penetration = np.logaddexp(0, -(dist - dist_min) / k) * k
