@@ -64,9 +64,9 @@ from pettingzoo.utils.conversions import parallel_wrapper_fn
 class raw_env(SimpleEnv, EzPickle):
     def __init__(
         self,
-        N=4,
+        N=1,
         local_ratio=0.5,
-        max_cycles=25,
+        max_cycles=250,
         continuous_actions=False,
         render_mode=None
     ):
@@ -100,7 +100,7 @@ parallel_env = parallel_wrapper_fn(env)
 
 
 class Scenario(BaseScenario):
-    def make_world(self, N=4):
+    def make_world(self, N=1):
         world = World()
         # set any world properties first
         world.dim_c = 2

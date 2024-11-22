@@ -167,7 +167,8 @@ class SimpleEnv(AECEnv):
         self.steps = 0
 
         self.current_actions = [None] * self.num_agents
-
+        # Return observations and additional info
+        return {agent: self.observe(agent) for agent in self.agents}, self.infos
     def _execute_world_step(self):
         # set action for each agent
         for i, agent in enumerate(self.world.agents):
@@ -312,6 +313,14 @@ class SimpleEnv(AECEnv):
                 radius = entity.radius
                 pygame.draw.circle(self.screen, entity.color * 200, (x, y), radius)
                 pygame.draw.circle(self.screen, (0, 0, 0), (x, y), radius, 1)  # borders
+                
+                heading_length = radius + 10  # Extend beyond the circle
+                theta = entity.state.orientation  # Agent's orientation in radians
+                heading_x = int(x + heading_length * np.cos(theta))
+                heading_y = int(y + heading_length * np.sin(theta))
+                pygame.draw.line(self.screen, (255, 0, 0), (x, y), (heading_x, heading_y), 2)
+
+                
             elif isinstance(entity, Landmark):
                 l, w = entity.length, entity.width
                 pygame.draw.rect(self.screen, entity.color * 200, (x, y, w, l))

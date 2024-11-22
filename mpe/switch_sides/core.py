@@ -76,16 +76,23 @@ class Agent(Entity):  # properties of agent entities
         self.c_noise = None
         # control range
         self.u_range = 1.0
+        self.v_range = 22  # cm/s (max linear velocity)
+        self.w_range = 2.84  # rad/s (max angular velocity for TurtleBot3)
         # state
         self.state = AgentState()
-        # action
+        # action (u -> [v, w] for differential drive control)
         self.action = Action()
         # script behavior to execute
         self.action_callback = None
         # max speed
         self.max_speed = 22 # cm/s
-
-
+        
+        use_differential_drive = True
+        
+        # Differential drive flag
+        self.use_differential_drive = use_differential_drive
+        # Add orientation state for differential drive
+        self.state.orientation = 0.0 if use_differential_drive else None
 
 class World:  # multi-agent world
     def __init__(self):
@@ -174,23 +181,43 @@ class World:  # multi-agent world
         for i, entity in enumerate(self.entities):
             if not entity.movable:
                 continue
-            entity.state.p_pos += entity.state.p_vel * self.dt
-            entity.state.p_vel = entity.state.p_vel * (1 - self.damping)
-            if p_force[i] is not None:
-                entity.state.p_vel += (p_force[i] / entity.mass) * self.dt
-            if entity.max_speed is not None:
-                speed = np.sqrt(
-                    np.square(entity.state.p_vel[0]) + np.square(entity.state.p_vel[1])
-                )
-                if speed > entity.max_speed:
-                    entity.state.p_vel = (
-                        entity.state.p_vel
-                        / np.sqrt(
-                            np.square(entity.state.p_vel[0])
-                            + np.square(entity.state.p_vel[1])
-                        )
-                        * entity.max_speed
+            
+            if isinstance(entity, Agent) and entity.use_differential_drive:
+                # Differential drive motion
+                v = entity.action.u[0]  # linear velocity (cm/s)
+                w = entity.action.u[1]  # angular velocity (rad/s)
+
+                # Constrain v and w within allowable range
+                v = np.clip(v, -entity.v_range, entity.v_range)
+                w = np.clip(w, -entity.w_range, entity.w_range)
+
+                # Update position and orientation based on differential drive kinematics
+                theta = entity.state.orientation
+                entity.state.p_pos[0] += v * np.cos(theta) * self.dt
+                entity.state.p_pos[1] += v * np.sin(theta) * self.dt
+                entity.state.orientation += w * self.dt
+
+                # Wrap orientation between -pi and pi
+                entity.state.orientation = (entity.state.orientation + np.pi) % (2 * np.pi) - np.pi
+            else:                       
+                # Standard motion
+                entity.state.p_pos += entity.state.p_vel * self.dt
+                entity.state.p_vel = entity.state.p_vel * (1 - self.damping)
+                if p_force[i] is not None:
+                    entity.state.p_vel += (p_force[i] / entity.mass) * self.dt
+                if entity.max_speed is not None:
+                    speed = np.sqrt(
+                        np.square(entity.state.p_vel[0]) + np.square(entity.state.p_vel[1])
                     )
+                    if speed > entity.max_speed:
+                        entity.state.p_vel = (
+                            entity.state.p_vel
+                            / np.sqrt(
+                                np.square(entity.state.p_vel[0])
+                                + np.square(entity.state.p_vel[1])
+                            )
+                            * entity.max_speed
+                        )
 
     def update_agent_state(self, agent):
         # set communication state (directly for now)
