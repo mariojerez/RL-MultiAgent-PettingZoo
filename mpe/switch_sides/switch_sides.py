@@ -64,7 +64,7 @@ from pettingzoo.utils.conversions import parallel_wrapper_fn
 class raw_env(SimpleEnv, EzPickle):
     def __init__(
         self,
-        N=1,
+        N=4,
         local_ratio=0.5,
         max_cycles=250,
         continuous_actions=False,

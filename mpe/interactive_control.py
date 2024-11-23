@@ -69,8 +69,15 @@ def main(continuous_actions=False, num_agents=1, max_cycles=250):
 
         # Ensure the action is valid for the agent's action space
         action_space = env.action_space(current_agent)
+        # Ensure continuous action matches expected action space shape
+    
         if continuous_actions:
-            action = np.clip(action, action_space.low, action_space.high)
+            action = np.array(action, dtype=np.float32)
+            # Pad the action array to match the required shape (e.g., [v, w, 0, 0, 0])
+            action = np.pad(action, (0, action_space.shape[0] - action.shape[0]), constant_values=0)
+            
+            
+            action = np.clip(action, action_space.low, action_space.high)  # Clip continuous actions
         else:
             assert action in range(action_space.n), f"Action {action} out of bounds!"
 
@@ -97,12 +104,7 @@ def main(continuous_actions=False, num_agents=1, max_cycles=250):
 
 
 if __name__ == "__main__":
-    # Let user choose the configuration
-    # print("Choose action type:")
-    # print("1. Discrete actions")
-    # print("2. Continuous actions")
-    # action_type = int
-    # (input("Enter 1 or 2: "))
+
     continuous  = False
 
     num_agents = 3

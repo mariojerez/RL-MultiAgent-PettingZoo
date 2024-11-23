@@ -40,7 +40,7 @@ class SimpleEnv(AECEnv):
         world,
         max_cycles,
         render_mode=None,
-        continuous_actions=False,
+        continuous_actions=True,
         local_ratio=None,
         dynamic_rescaling=False,
     ):
