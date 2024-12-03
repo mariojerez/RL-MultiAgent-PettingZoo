@@ -331,10 +331,10 @@ class SimpleEnv(AECEnv):
                 pygame.draw.rect(self.screen, entity.color * 200, (x, y, radius * 10, radius * 20))
                 pygame.draw.rect(self.screen, (0, 0, 0), (x, y, radius, radius), 1)
 
-            #TODO: Add this assert back when we limit agents from leaving boundary
-            #assert (
-            #    0 < x < self.width and 0 < y < self.height
-            #), f"Coordinates {(x, y)} are out of bounds."
+            
+            assert (
+               0 < x < self.width and 0 < y < self.height
+            ), f"Coordinates {(x, y)} are out of bounds."
 
             # text
             if isinstance(entity, Agent):
