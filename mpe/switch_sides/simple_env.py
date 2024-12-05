@@ -295,9 +295,6 @@ class SimpleEnv(AECEnv):
             self.clock.tick(self.metadata["render_fps"])
             return
         
-
-
-
     def draw(self):
         # clear screen
         self.screen.fill((255, 255, 255))
@@ -307,20 +304,15 @@ class SimpleEnv(AECEnv):
         for e, entity in enumerate(self.world.entities):
             # geometry
             x, y = entity.state.p_pos
-            
             if isinstance(entity, Agent):
                 radius = entity.radius
                 pygame.draw.circle(self.screen, entity.color * 200, (x, y), radius)
                 pygame.draw.circle(self.screen, (0, 0, 0), (x, y), radius, 1)  # borders
+                assert (0 < x < self.length and 0 < y < self.width), f"Coordinates {(x, y)} are out of bounds."
             elif isinstance(entity, Landmark):
                 l, w = entity.length, entity.width
                 pygame.draw.rect(self.screen, entity.color * 200, (x, y, w, l))
                 pygame.draw.rect(self.screen, (0, 0, 0), (x, y, w, l), 1)
-
-            #TODO: Add this assert back when we limit agents from leaving boundary
-            #assert (
-            #    0 < x < self.width and 0 < y < self.height
-            #), f"Coordinates {(x, y)} are out of bounds."
 
             # text
             if isinstance(entity, Agent):

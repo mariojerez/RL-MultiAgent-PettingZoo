@@ -66,7 +66,7 @@ class raw_env(SimpleEnv, EzPickle):
         self,
         N=4,
         local_ratio=0.5,
-        max_cycles=25,
+        max_cycles=100,
         continuous_actions=False,
         render_mode=None
     ):
