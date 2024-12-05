@@ -308,7 +308,6 @@ class SimpleEnv(AECEnv):
                 radius = entity.radius
                 pygame.draw.circle(self.screen, entity.color * 200, (x, y), radius)
                 pygame.draw.circle(self.screen, (0, 0, 0), (x, y), radius, 1)  # borders
-
                 assert (0 < x < self.length and 0 < y < self.width), f"Coordinates {(x, y)} are out of bounds."
             elif isinstance(entity, Landmark):
                 l, w = entity.length, entity.width

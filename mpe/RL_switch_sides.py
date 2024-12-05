@@ -11,7 +11,6 @@ while env.agents:
     # insert policy here
 
     # Prevent agents from leaving environment boundaries
-    masks = {}
     for agent in observations:
         # Agent observations: `[self_vel, self_pos, landmark_rel_positions, other_agent_rel_positions, communication]`
         x_pos, y_pos = observations[agent][2], observations[agent][3]
