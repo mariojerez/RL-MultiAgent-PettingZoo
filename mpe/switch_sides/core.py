@@ -56,6 +56,8 @@ class Entity:  # properties and state of physical world entity
 class Landmark(Entity):  # properties of landmark entities
     def __init__(self):
         super().__init__()
+        self.width = 0.1
+        self.length = 0.1
 
 
 class Agent(Entity):  # properties of agent entities
@@ -208,7 +210,16 @@ class World:  # multi-agent world
         delta_pos = entity_a.state.p_pos - entity_b.state.p_pos
         dist = np.sqrt(np.sum(np.square(delta_pos)))
         # minimum allowable distance
-        dist_min = entity_a.size + entity_b.size
+        #temporary patch:
+        dist_min = 0
+        for entity in (entity_a, entity_b):
+            if isinstance(entity, Agent):
+                dist_min += entity.size
+            elif isinstance(entity, Landmark):
+                dist_min += entity.width #this will allow agents to pass through most of landmark without collision for now, fix later.
+                dist_min += entity.length
+        #TODO: Adjust logic so that determines collision based on length/width if landmark, and radius if agent.
+        
         # softmax penetration
         k = self.contact_margin
         penetration = np.logaddexp(0, -(dist - dist_min) / k) * k
